@@ -4,7 +4,7 @@ const {
   multiply,
   divide,
   modulo,
-  power,
+  power
 } = require("../src/calculator");
 
 describe("calculator", () => {

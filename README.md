@@ -48,10 +48,10 @@ Debes configurar **todo lo siguiente** sin modificar `src/calculator.js` ni `src
 - [x] Agregar al `package.json` los scripts: `test` y `test:ci`
 
 ### 2. Linting (`eslint`)
-- [ ] Instalar y configurar ESLint
-- [ ] Crear archivo de configuración `.eslintrc.js` o `eslint.config.js`
-- [ ] El código fuente debe pasar el linter sin errores
-- [ ] Agregar al `package.json` el script: `lint`
+- [x] Instalar y configurar ESLint
+- [x] Crear archivo de configuración `.eslintrc.js` o `eslint.config.js`
+- [x] El código fuente debe pasar el linter sin errores
+- [x] Agregar al `package.json` el script: `lint`
 
 ### 3. Dockerfile
 - [ ] Crear un `Dockerfile` que construya y ejecute la aplicación
