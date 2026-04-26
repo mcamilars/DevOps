@@ -7,12 +7,21 @@
     "calculadora": "./src/index.js"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "test": "jest --coverage",
+    "test:ci": "jest --ci --coverage --runInBand"
   },
-  "keywords": ["calculadora", "devsecops", "taller"],
+  "keywords": [
+    "calculadora",
+    "devsecops",
+    "taller"
+  ],
   "author": "",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

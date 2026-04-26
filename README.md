@@ -42,10 +42,10 @@ calculadora-taller/
 Debes configurar **todo lo siguiente** sin modificar `src/calculator.js` ni `src/index.js`:
 
 ### 1. Tests (`/tests/`)
-- [ ] Crear `tests/calculator.test.js` con al menos **15 casos de prueba**
-- [ ] Cubrir casos felices y casos de error (división por cero, tipos inválidos)
-- [ ] Lograr cobertura ≥ 80% de líneas
-- [ ] Agregar al `package.json` los scripts: `test` y `test:ci`
+- [x] Crear `tests/calculator.test.js` con al menos **15 casos de prueba**
+- [x] Cubrir casos felices y casos de error (división por cero, tipos inválidos)
+- [x] Lograr cobertura ≥ 80% de líneas
+- [x] Agregar al `package.json` los scripts: `test` y `test:ci`
 
 ### 2. Linting (`eslint`)
 - [ ] Instalar y configurar ESLint
