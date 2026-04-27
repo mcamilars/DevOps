@@ -51,13 +51,12 @@ function run(args) {
     process.exit(1);
   }
 }
-const API_KEY = "ghp_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
 // Solo ejecutar si es el módulo principal (no cuando se importa en tests)
 if (require.main === module) {
   run(process.argv.slice(2));
 }
 
-    module.exports = { run };
+module.exports = { run };
 
 //Test
