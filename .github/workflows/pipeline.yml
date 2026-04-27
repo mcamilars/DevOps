@@ -12,6 +12,7 @@ on:
 env:
   NODE_VERSION: "20"
   IMAGE_NAME: "calculadora"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   build:
@@ -19,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clonar repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -36,10 +37,10 @@ jobs:
     needs: build
     steps:
       - name: Clonar repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -56,10 +57,10 @@ jobs:
     needs: build
     steps:
       - name: Clonar repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -71,7 +72,7 @@ jobs:
         run: npm run test:ci
 
       - name: Publicar artefacto de cobertura
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-report
           path: coverage/
@@ -82,12 +83,12 @@ jobs:
     needs: build
     steps:
       - name: Clonar repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -119,7 +120,7 @@ jobs:
       - quality_sast
       - tests
       - security_sca
-    if: always()
+    if: github.ref == 'refs/heads/main' && needs.build.result == 'success' && needs.quality_sast.result == 'success' && needs.tests.result == 'success' && needs.security_sca.result == 'success'
     steps:
       - name: Resumen del pipeline
         run: |
@@ -134,9 +135,7 @@ jobs:
           echo "commit:       ${{ github.sha }}"
 
       - name: Clonar repositorio
-        if: github.ref == 'refs/heads/main' && needs.build.result == 'success' && needs.quality_sast.result == 'success' && needs.tests.result == 'success' && needs.security_sca.result == 'success'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Construir imagen Docker
-        if: github.ref == 'refs/heads/main' && needs.build.result == 'success' && needs.quality_sast.result == 'success' && needs.tests.result == 'success' && needs.security_sca.result == 'success'
         run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
