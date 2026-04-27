@@ -1,0 +1,142 @@
+name: Flujo CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: "20"
+  IMAGE_NAME: "calculadora"
+
+jobs:
+  build:
+    name: Preparar Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+  quality_sast:
+    name: Calidad de Código (SAST)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar ESLint
+        run: npm run lint
+
+  tests:
+    name: Pruebas con Cobertura
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar pruebas en modo CI
+        run: npm run test:ci
+
+      - name: Publicar artefacto de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  security_sca:
+    name: Seguridad (SCA + Secretos)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Verificar que existe package-lock.json
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "package-lock.json no encontrado"
+            exit 1
+          fi
+          echo "package-lock.json presente"
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Auditoría de dependencias (HIGH/CRITICAL)
+        run: npm audit --audit-level=high
+
+      - name: Escanear secretos hardcodeados (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  docker_build:
+    name: Build de Docker (solo main)
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - quality_sast
+      - tests
+      - security_sca
+    if: always()
+    steps:
+      - name: Resumen del pipeline
+        run: |
+          echo "============================================"
+          echo "RESUMEN DEL PIPELINE CI/CD"
+          echo "============================================"
+          echo "build:        ${{ needs.build.result }}"
+          echo "quality_sast: ${{ needs.quality_sast.result }}"
+          echo "tests:        ${{ needs.tests.result }}"
+          echo "security_sca: ${{ needs.security_sca.result }}"
+          echo "rama:         ${{ github.ref_name }}"
+          echo "commit:       ${{ github.sha }}"
+
+      - name: Clonar repositorio
+        if: github.ref == 'refs/heads/main' && needs.build.result == 'success' && needs.quality_sast.result == 'success' && needs.tests.result == 'success' && needs.security_sca.result == 'success'
+        uses: actions/checkout@v4
+
+      - name: Construir imagen Docker
+        if: github.ref == 'refs/heads/main' && needs.build.result == 'success' && needs.quality_sast.result == 'success' && needs.tests.result == 'success' && needs.security_sca.result == 'success'
+        run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
