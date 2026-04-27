@@ -59,15 +59,15 @@ Debes configurar **todo lo siguiente** sin modificar `src/calculator.js` ni `src
 - [x] Seguir buenas prácticas: usuario no-root, COPY selectivo, capas optimizadas
 
 ### 4. Pipeline CI/CD (`.github/workflows/pipeline.yml`)
-- [ ] El pipeline debe tener **al menos 4 jobs** encadenados con `needs:`
-- [ ] Incluir: build → calidad de código (SAST) → tests con cobertura → seguridad (SCA) → build Docker
-- [ ] El build de Docker solo debe correr en la rama `main`
-- [ ] Los jobs de calidad, tests y seguridad deben correr en paralelo
+- [x] El pipeline debe tener **al menos 4 jobs** encadenados con `needs:`
+- [x] Incluir: build → calidad de código (SAST) → tests con cobertura → seguridad (SCA) → build Docker
+- [x] El build de Docker solo debe correr en la rama `main`
+- [x] Los jobs de calidad, tests y seguridad deben correr en paralelo
 
 ### 5. Seguridad
-- [ ] El pipeline debe fallar si `npm audit` reporta vulnerabilidades HIGH o CRITICAL
-- [ ] El pipeline debe verificar que no hay secretos hardcodeados en el código
-- [ ] El Dockerfile no debe correr como `root`
+- [x] El pipeline debe fallar si `npm audit` reporta vulnerabilidades HIGH o CRITICAL
+- [x] El pipeline debe verificar que no hay secretos hardcodeados en el código
+- [x] El Dockerfile no debe correr como `root`
 
 ---
 
