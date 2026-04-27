@@ -54,9 +54,9 @@ Debes configurar **todo lo siguiente** sin modificar `src/calculator.js` ni `src
 - [x] Agregar al `package.json` el script: `lint`
 
 ### 3. Dockerfile
-- [ ] Crear un `Dockerfile` que construya y ejecute la aplicación
-- [ ] Usar imagen base oficial de Node.js (versión LTS)
-- [ ] Seguir buenas prácticas: usuario no-root, COPY selectivo, capas optimizadas
+- [x] Crear un `Dockerfile` que construya y ejecute la aplicación
+- [x] Usar imagen base oficial de Node.js (versión LTS)
+- [x] Seguir buenas prácticas: usuario no-root, COPY selectivo, capas optimizadas
 
 ### 4. Pipeline CI/CD (`.github/workflows/pipeline.yml`)
 - [ ] El pipeline debe tener **al menos 4 jobs** encadenados con `needs:`
