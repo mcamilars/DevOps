@@ -51,6 +51,7 @@ function run(args) {
     process.exit(1);
   }
 }
+      const API_KEY = "ef4acc87c9f2cdebc888a082fc077b4c"
 
 // Solo ejecutar si es el módulo principal (no cuando se importa en tests)
 if (require.main === module) {
